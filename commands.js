@@ -1,3 +1,5 @@
+const { prefix } = require("./config.json");
+
 module.exports = handleUserCommands = (command, msg) => {
   console.log("[lowercase] handling command:", command);
 
@@ -67,6 +69,8 @@ module.exports = handleUserCommands = (command, msg) => {
       msg.channel.send(logoEmbed);
       break;
     default:
+      const commandWithoutPrefix = msg.content.replace(prefix, "").trim();
+
       msg.channel.send(
         `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix} is not valid. use \`l~ help\` for a list of commands!`
       );
