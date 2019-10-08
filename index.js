@@ -11,7 +11,8 @@ client.once("ready", () => {
 
 client.on("message", msg => {
   const regex = /[A-HJ-Z]|I(?:[A-Za-z0-9])/gm;
-  let member = msg.member.user.username;
+  let member = msg.member.user.username.toLowerCase();
+  console.log(member);
   let originalMessage = msg.content;
 
   const containsUppercase = string => {
