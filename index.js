@@ -29,7 +29,7 @@ client.on("message", msg => {
     });
 
     return {
-      said: `**${member.toLowerCase()} said:** ${newMsg}`,
+      said: `**${member} said:** ${newMsg}`,
       content: newMsg
     };
   };
