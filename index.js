@@ -4,9 +4,15 @@ const discord = require("discord.js");
 const { prefix } = require("./config.json");
 const handleUserCommands = require("./commands");
 const client = new discord.Client();
+const https = require("https");
 
 client.once("ready", () => {
   console.log("ready.");
+
+  setInterval(
+    () => https.get("https://lowercase-discord.herokuapp.com/"),
+    300000
+  );
 });
 
 client.on("message", msg => {
