@@ -12,7 +12,6 @@ client.once("ready", () => {
 client.on("message", msg => {
   const regex = /[A-HJ-Z]|I(?:[A-Za-z0-9])/gm;
   let member = msg.member.user.username.toLowerCase();
-  console.log(member);
   let originalMessage = msg.content;
 
   const containsUppercase = string => {
@@ -61,7 +60,7 @@ client.on("message", msg => {
   }
 });
 
-// client.login(process.env.TOKEN); // .listen(process.env.PORT || 5000);
+client.login(process.env.TOKEN); // .listen(process.env.PORT || 5000);
 
 const express = require("express");
 const app = express();
