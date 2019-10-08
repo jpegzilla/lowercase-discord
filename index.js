@@ -61,7 +61,7 @@ client.on("message", msg => {
   }
 });
 
-client.login(process.env.TOKEN); // .listen(process.env.PORT || 5000);
+// client.login(process.env.TOKEN); // .listen(process.env.PORT || 5000);
 
 const express = require("express");
 const app = express();
