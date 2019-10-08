@@ -42,16 +42,8 @@ client.on("message", msg => {
   if (beginsWithPrefix(prefix, msg.content) && containsUppercase(msg.content)) {
     // if message is invalid, but user was trying to enter a command
 
-    console.log("message caught. running command");
-
     const fixedMessage = fixMessageCase(member, originalMessage).content;
     const commandWithoutPrefix = fixedMessage.replace(prefix, "").trim();
-
-    console.log("[lowercase] fixed message.", commandWithoutPrefix);
-
-    msg.channel.send(
-      `\`[lowercase]\` command recieved ⇒ ${commandWithoutPrefix}`
-    );
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
   } else if (containsUppercase(msg.content)) {
