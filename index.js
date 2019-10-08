@@ -51,7 +51,7 @@ client.on("message", msg => {
       `\`[lowercase]\` command recieved ⇒ ${commandWithoutPrefix}`
     );
 
-    if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix);
+    if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
   } else if (containsUppercase(msg.content)) {
     let newMsg = fixMessageCase(member, originalMessage).said;
 
@@ -62,11 +62,7 @@ client.on("message", msg => {
 
     const commandWithoutPrefix = msg.content.replace(prefix, "").trim();
 
-    msg.channel.send(
-      `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix}`
-    );
-
-    if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix);
+    if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
   }
 });
 
