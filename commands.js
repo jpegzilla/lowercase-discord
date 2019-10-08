@@ -53,7 +53,7 @@ module.exports = handleUserCommands = (command, msg) => {
     case "hi":
     case "hey":
     case "test":
-      msh.channel.send("hello!");
+      msg.channel.send("hello!");
       break;
 
     // show lowercase icon
