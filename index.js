@@ -61,7 +61,7 @@ client.on("message", msg => {
     msg.channel.send(`${newMsg}`);
     msg.delete();
   } else if (beginsWithPrefix(prefix, msg.content)) {
-    // if user is trying to ask the bot to do somethin
+    // if user is trying to ask the bot to do something
     const commandWithoutPrefix = msg.content.replace(prefix, "").trim();
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
