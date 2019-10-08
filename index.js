@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const discord = require("discord.js");
 const { prefix } = require("./config.json");
 const handleUserCommands = require("./commands");
@@ -71,6 +73,8 @@ client.login(process.env.TOKEN); // .listen(process.env.PORT || 5000);
 const express = require("express");
 const app = express();
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("listening on port", process.env.PORT);
+let port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log("listening on port", port);
 });
