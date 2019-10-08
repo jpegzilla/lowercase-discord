@@ -11,11 +11,17 @@ client.once("ready", () => {
 
 client.on("message", msg => {
   const regex = /[A-HJ-Z]|I(?:[A-Za-z0-9])/gm;
+  const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
   let member = msg.member.user.username.toLowerCase();
   let originalMessage = msg.content;
 
   const containsUppercase = string => {
     if (regex.test(string)) return true;
+    else return false;
+  };
+
+  const isLikelyEmote = string => {
+    if (emoteRegex.test(string)) return true;
     else return false;
   };
 
@@ -46,6 +52,8 @@ client.on("message", msg => {
     const commandWithoutPrefix = fixedMessage.replace(prefix, "").trim();
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
+  } else if (isLikelyEmote(msg.content)) {
+    return;
   } else if (containsUppercase(msg.content)) {
     let newMsg = fixMessageCase(member, originalMessage).said;
 
