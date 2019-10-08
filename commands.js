@@ -46,6 +46,14 @@ module.exports = handleUserCommands = (command, msg) => {
       msg.channel.send(helpMessage);
       break;
 
+    // hello test command
+    case "hello":
+    case "hi":
+    case "hey":
+    case "test":
+      msh.channel.send("hello!");
+      break;
+
     // show lowercase icon
     case "logo":
     case "icon":
