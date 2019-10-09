@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const discord = require("discord.js");
-const {prefix} = require("./config.json");
+const { prefix } = require("./config.json");
 const handleUserCommands = require("./commands");
 const client = new discord.Client();
 const https = require("https");
@@ -29,7 +29,7 @@ client.on("message", msg => {
   };
 
   const isLikelyUrl = string => {
-    if (urlRegex.match(string)) return true;
+    if (string.match(urlRegex)) return true;
     else return false;
   };
 
