@@ -15,5 +15,3 @@ evaluates user messages, replaces all uppercase letters that are not the persona
 invite the bot here:
 
 https://discordapp.com/oauth2/authorize?client_id=631079115243388938&scope=bot&permissions=268790902
-
-if you want to run this yourself, basically just create a .env file in the directory root with your discord token `TOKEN=your-token-here` &mdash; or, put it in your environment variables. that's all! simply `npm start` and you're ready to go.
