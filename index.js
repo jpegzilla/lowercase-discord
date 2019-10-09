@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const discord = require("discord.js");
-const { prefix } = require("./config.json");
+const {prefix} = require("./config.json");
 const handleUserCommands = require("./commands");
 const client = new discord.Client();
 const https = require("https");
@@ -18,12 +18,18 @@ client.once("ready", () => {
 client.on("message", msg => {
   const regex = /[A-HJ-Z]|I(?:[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
+  const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
   let member = msg.member.user.username.toLowerCase();
   if (member == "lowercase") return;
   let originalMessage = msg.content;
 
   const containsUppercase = string => {
     if (regex.test(string)) return true;
+    else return false;
+  };
+
+  const isLikelyUrl = string => {
+    if (urlRegex.match(string)) return true;
     else return false;
   };
 
@@ -59,7 +65,7 @@ client.on("message", msg => {
     const commandWithoutPrefix = fixedMessage.replace(prefix, "").trim();
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg);
-  } else if (isLikelyEmote(msg.content)) {
+  } else if (isLikelyEmote(msg.content) || isLikelyUrl(msg.content)) {
     return;
   } else if (containsUppercase(msg.content)) {
     let newMsg = fixMessageCase(member, originalMessage).said;
