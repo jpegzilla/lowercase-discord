@@ -91,11 +91,10 @@ client.on("message", msg => {
       // send message with optional attachments
       msg.channel
         .send(finalMessage, originalAttachments)
-        .then(nm => {
-          console.log("new message:", { newMessage: nm });
-          msg.delete();
-        })
+        .then(() => msg.delete())
         .catch(e => console.log(e));
+
+      return;
     }
   } else if (containsUppercase(msg.content)) {
     let newMsg = fixMessageCase(member, originalMessage).said;
@@ -103,11 +102,10 @@ client.on("message", msg => {
     // send message with optional attachments
     msg.channel
       .send(`${newMsg}`, originalAttachments)
-      .then(nm => {
-        console.log("new message:", { newMessage: nm });
-        msg.delete();
-      })
+      .then(() => msg.delete())
       .catch(e => console.log(e));
+
+    return;
   } else if (beginsWithPrefix(prefix, msg.content)) {
     // if user is trying to ask the bot to do something
     const commandWithoutPrefix = msg.content.replace(prefix, "").trim();
