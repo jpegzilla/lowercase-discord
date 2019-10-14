@@ -81,7 +81,10 @@ client.on("message", msg => {
     if (urlOnlyRegex.test(msg.content)) {
       // only a url and nothing else
       return;
-    } else {
+    } else if (
+      containsUppercase(msg.content) &&
+      urlOnlyRegex.test(msg.content)
+    ) {
       // prevent capital letters from being sent in messages with links, but preserve url case
       const url = msg.content.match(urlRegex)[0];
       const messageWithoutUrl = msg.content.replace(url, "");
