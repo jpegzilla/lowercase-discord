@@ -2,11 +2,11 @@ require("dotenv").config();
 
 const discord = require("discord.js");
 const { prefix } = require("./config.json");
-const handleUserCommands = require("./commands");
+
+const { handleUserCommands, correction } = require("./commands");
+
 const client = new discord.Client();
 const https = require("https");
-let correction = true;
-module.exports = correction;
 
 client.once("ready", () => {
   console.log("ready.");
@@ -107,6 +107,7 @@ client.on("message", msg => {
       return;
     }
   } else if (containsUppercase(msg.content) && correction == true) {
+    console.log(correction);
     let newMsg = fixMessageCase(member, originalMessage).said;
 
     // send message with optional attachments

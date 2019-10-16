@@ -1,7 +1,8 @@
 const { prefix } = require("./config.json");
-let correction = require(".");
+let correction = true;
+console.log("correction", correction);
 
-module.exports = handleUserCommands = (command, msg) => {
+const handleUserCommands = (command, msg) => {
   console.log("[lowercase] handling command:", command);
 
   const discord = require("discord.js");
@@ -61,6 +62,12 @@ module.exports = handleUserCommands = (command, msg) => {
     // toggle lowercase correction
     case "correction toggle":
       correction = correction == true ? false : true;
+
+      msg.channel.send(
+        `\`[lowercase]\` reporting for duty ⇒ correction has been set to ${
+          correction ? "true" : "false"
+        }.`
+      );
       break;
 
     // show lowercase icon
@@ -83,4 +90,9 @@ module.exports = handleUserCommands = (command, msg) => {
       );
       return;
   }
+};
+
+module.exports = {
+  handleUserCommands: handleUserCommands,
+  correction: correction
 };
