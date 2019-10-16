@@ -31,7 +31,7 @@ module.exports = handleUserCommands = (command, msg) => {
         )
         .addField("version", lowercaseInfo.version, true)
         .addField("prefix", configVars.prefix, true)
-        .addField("correction on", correction.toString())
+        .addField("correction on", JSON.stringify(correction))
         .setTimestamp();
 
       msg.channel.send(versionEmbed);
