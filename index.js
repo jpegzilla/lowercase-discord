@@ -3,7 +3,7 @@ require("dotenv").config();
 const discord = require("discord.js");
 const { prefix } = require("./config.json");
 
-const { handleUserCommands, correction } = require("./commands");
+const { handleUserCommands } = require("./commands");
 
 const client = new discord.Client();
 const https = require("https");
@@ -18,6 +18,7 @@ client.once("ready", () => {
 });
 
 client.on("message", msg => {
+  let { correction } = require("./commands");
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
   const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
