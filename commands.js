@@ -1,4 +1,5 @@
 const { prefix } = require("./config.json");
+let correction = require(".");
 
 module.exports = handleUserCommands = (command, msg) => {
   console.log("[lowercase] handling command:", command);
@@ -30,6 +31,7 @@ module.exports = handleUserCommands = (command, msg) => {
         )
         .addField("version", lowercaseInfo.version, true)
         .addField("prefix", configVars.prefix, true)
+        .addField("correction on", correction.toString())
         .setTimestamp();
 
       msg.channel.send(versionEmbed);
@@ -54,6 +56,11 @@ module.exports = handleUserCommands = (command, msg) => {
     case "hey":
     case "test":
       msg.channel.send("hello!");
+      break;
+
+    // toggle lowercase correction
+    case "correction toggle":
+      correction = correction == true ? false : true;
       break;
 
     // show lowercase icon

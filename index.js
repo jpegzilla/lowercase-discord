@@ -5,6 +5,8 @@ const { prefix } = require("./config.json");
 const handleUserCommands = require("./commands");
 const client = new discord.Client();
 const https = require("https");
+let correction = true;
+module.exports = correction;
 
 client.once("ready", () => {
   console.log("ready.");
@@ -70,7 +72,11 @@ client.on("message", msg => {
     else return false;
   };
 
-  if (beginsWithPrefix(prefix, msg.content) && containsUppercase(msg.content)) {
+  if (
+    beginsWithPrefix(prefix, msg.content) &&
+    containsUppercase(msg.content) &&
+    correction == true
+  ) {
     // if message is invalid, but user was trying to enter a command
 
     const fixedMessage = fixMessageCase(member, originalMessage).content;
@@ -83,7 +89,8 @@ client.on("message", msg => {
       return;
     } else if (
       containsUppercase(msg.content) &&
-      urlOnlyRegex.test(msg.content)
+      urlOnlyRegex.test(msg.content) &&
+      correction == true
     ) {
       // prevent capital letters from being sent in messages with links, but preserve url case
       const url = msg.content.match(urlRegex)[0];
@@ -99,7 +106,7 @@ client.on("message", msg => {
 
       return;
     }
-  } else if (containsUppercase(msg.content)) {
+  } else if (containsUppercase(msg.content) && correction == true) {
     let newMsg = fixMessageCase(member, originalMessage).said;
 
     // send message with optional attachments
