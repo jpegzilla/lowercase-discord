@@ -19,7 +19,6 @@ client.once("ready", () => {
 
 client.on("message", msg => {
   let { correction } = require("./commands");
-  console.log("CORRECTION IS:", correction);
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
   const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
@@ -109,7 +108,6 @@ client.on("message", msg => {
       return;
     }
   } else if (containsUppercase(msg.content) && correction == true) {
-    console.log(correction);
     let newMsg = fixMessageCase(member, originalMessage).said;
 
     // send message with optional attachments
