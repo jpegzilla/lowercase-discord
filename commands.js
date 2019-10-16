@@ -63,6 +63,8 @@ const handleUserCommands = (command, msg) => {
     case "correction toggle":
       correction = correction == true ? false : true;
 
+      module.exports.correction = correction;
+
       msg.channel.send(
         `\`[lowercase]\` reporting for duty ⇒ correction has been set to ${
           correction ? "true" : "false"
