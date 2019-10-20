@@ -1,5 +1,5 @@
 const { prefix } = require("./config.json");
-let correction = true;
+let correction;
 
 const handleUserCommands = (command, msg) => {
   console.log("[lowercase] handling command:", command);
