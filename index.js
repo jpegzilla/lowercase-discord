@@ -53,6 +53,15 @@ client.on("message", msg => {
     return false;
   };
 
+  if (silence(msg.content)) {
+    const m = msg.content.replace(r, "eris");
+
+    return msg.channel
+      .send(`**${member} (*) said**: ${m}`)
+      .then(() => msg.delete())
+      .catch(e => console.log(e));
+  }
+
   const isLikelyUrl = string => {
     if (string.match(urlRegex)) return true;
     else return false;
@@ -88,15 +97,6 @@ client.on("message", msg => {
     if (string.startsWith(prefix)) return true;
     else return false;
   };
-
-  if (silence(msg.content)) {
-    const m = msg.content.replace(r, "eris");
-
-    msg.channel
-      .send(m)
-      .then(() => msg.delete())
-      .catch(e => console.log(e));
-  }
 
   if (
     beginsWithPrefix(prefix, msg.content) &&
