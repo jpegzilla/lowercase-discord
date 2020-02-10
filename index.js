@@ -20,18 +20,16 @@ client.once("ready", () => {
 client.on("message", msg => {
   let { correction } = require("./commands");
   const a = "abcdefghijklmnopqrstuvwxyz";
-  const f = ["g", "i", "m"];
-  const l = "\b";
+
   const r = new RegExp(
-    `${l}${String.fromCharCode(
+    `(\\b${String.fromCharCode(
       a.charCodeAt(a.length / 2 - 9)
     )}${String.fromCharCode(
       a.charCodeAt(a.length / 2 - 2)
-    )}${String.fromCharCode(a.charCodeAt(a.length / 2 - 5))}${l}`,
-    f.join("")
+    )}${String.fromCharCode(a.charCodeAt(a.length / 2 - 5))}\\b)`,
+    "gi"
   );
 
-  const dnregex = r;
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
   const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
@@ -51,7 +49,7 @@ client.on("message", msg => {
   };
 
   const silence = string => {
-    if (dnregex.test(string)) return true;
+    if (r.test(string)) return true;
     return false;
   };
 
@@ -92,7 +90,7 @@ client.on("message", msg => {
   };
 
   if (silence(msg.content)) {
-    const m = "who?";
+    const m = msg.content.replace(r, "eris");
 
     msg.channel
       .send(m)
