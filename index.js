@@ -53,14 +53,14 @@ client.on("message", msg => {
     return false;
   };
 
-  if (silence(msg.content)) {
-    const m = msg.content.replace(r, "eris");
-
-    return msg.channel
-      .send(`**${member} (*) said**: ${m}`)
-      .then(() => msg.delete())
-      .catch(e => console.log(e));
-  }
+  // if (silence(msg.content)) {
+  //   const m = msg.content.replace(r, "eris");
+  //
+  //   return msg.channel
+  //     .send(`**${member} (*) said**: ${m}`)
+  //     .then(() => msg.delete())
+  //     .catch(e => console.log(e));
+  // }
 
   const isLikelyUrl = string => {
     if (string.match(urlRegex)) return true;
