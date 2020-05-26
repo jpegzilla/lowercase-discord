@@ -96,7 +96,7 @@ client.on("message", msg => {
       // prevent capital letters from being sent in messages with links, but preserve url case
       const url = msg.content.match(urlRegex)[0];
       const messageWithoutUrl = msg.content.replace(url, "");
-      const messageUrlIndex = msg.indexOf(url);
+      const messageUrlIndex = msg.content.indexOf(url);
       const fixedMessage = fixMessageCase(member, messageWithoutUrl).said;
       const finalMessage = `${fixedMessage.slice(
         0,
