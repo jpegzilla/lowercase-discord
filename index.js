@@ -19,16 +19,6 @@ client.once("ready", () => {
 
 client.on("message", msg => {
   let { correction } = require("./commands");
-  const a = "abcdefghijklmnopqrstuvwxyz";
-
-  const r = new RegExp(
-    `(\\b${String.fromCharCode(
-      a.charCodeAt(a.length / 2 - 9)
-    )}${String.fromCharCode(
-      a.charCodeAt(a.length / 2 - 2)
-    )}${String.fromCharCode(a.charCodeAt(a.length / 2 - 5))}\\b)`,
-    "gi"
-  );
 
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
@@ -47,20 +37,6 @@ client.on("message", msg => {
     if (regex.test(string)) return true;
     else return false;
   };
-
-  const silence = string => {
-    if (r.test(string)) return true;
-    return false;
-  };
-
-  // if (silence(msg.content)) {
-  //   const m = msg.content.replace(r, "eris");
-  //
-  //   return msg.channel
-  //     .send(`**${member} (*) said**: ${m}`)
-  //     .then(() => msg.delete())
-  //     .catch(e => console.log(e));
-  // }
 
   const isLikelyUrl = string => {
     if (string.match(urlRegex)) return true;
@@ -115,7 +91,7 @@ client.on("message", msg => {
       return;
     } else if (
       containsUppercase(msg.content) &&
-      urlOnlyRegex.test(msg.content) &&
+      urlRegex.test(msg.content) &&
       correction == true
     ) {
       // prevent capital letters from being sent in messages with links, but preserve url case
