@@ -22,8 +22,8 @@ client.on("message", msg => {
 
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm;
   const emoteRegex = /:(?:[a-zA-Z0-9]+):/gm;
-  const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
-  const urlOnlyRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/gm;
+  const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*\/?)/gm;
+  const urlOnlyRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*\/?)$/gm;
   let member = msg.member.user.username.toLowerCase();
 
   if (member == "lowercase") return;
@@ -95,18 +95,31 @@ client.on("message", msg => {
       correction == true
     ) {
       // prevent capital letters from being sent in messages with links, but preserve url case
-      const url = msg.content.match(urlRegex)[0];
-      const messageWithoutUrl = msg.content.replace(url, "");
-      const messageUrlIndex = msg.content.indexOf(url);
-      const fixedMessage = fixMessageCase(member, messageWithoutUrl).said;
-      const finalMessage = `${fixedMessage.slice(
-        0,
-        messageUrlIndex
-      )} ${url} ${fixedMessage.slice(messageUrlIndex)}`;
+      const urls = msg.content.match(urlRegex);
+
+      const finalMessage = msg.content
+        .split(urlRegex)
+        .map(item => {
+          if (item === undefined) {
+            const url = urls.shift();
+
+            if (url[url.length - 1] === "/")
+              return url.slice(0, url.length - 1);
+
+            return url;
+          }
+
+          if (urlRegex.test(item)) return item.replace(/ +(?= )/g, "");
+
+          return item.toLowerCase().replace(/ +(?= )/g, "");
+        })
+        .join("");
+
+      const fixedMessage = fixMessageCase(member, finalMessage).said;
 
       // send message with optional attachments
       msg.channel
-        .send(finalMessage, originalAttachments)
+        .send(fixedMessage, originalAttachments)
         .then(() => msg.delete())
         .catch(e => console.log(e));
 
