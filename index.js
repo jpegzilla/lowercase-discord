@@ -48,6 +48,13 @@ client.on('message', msg => {
     else return false
   }
 
+  const appendData = (member, newMsg) => {
+    return {
+      said: `**${member} said:** ${newMsg}`,
+      content: newMsg
+    }
+  }
+
   const fixMessageCase = (member, originalMessage) => {
     // replace inappropriate letters with x's
     let replacedWithX = originalMessage.replace(regex, 'x')
@@ -63,10 +70,7 @@ client.on('message', msg => {
       } else newMsg += c
     })
 
-    return {
-      said: `**${member} said:** ${newMsg}`,
-      content: newMsg
-    }
+    return newMsg
   }
 
   const beginsWithPrefix = (prefix, string) => {
@@ -81,7 +85,10 @@ client.on('message', msg => {
   ) {
     // if message is invalid, but user was trying to enter a command
 
-    const fixedMessage = fixMessageCase(member, originalMessage).content
+    const fixedMessage = appendData(
+      member,
+      fixMessageCase(member, originalMessage)
+    ).content
     const commandWithoutPrefix = fixedMessage.replace(prefix, '').trim()
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg)
@@ -95,10 +102,42 @@ client.on('message', msg => {
       correction == true
     ) {
       // prevent capital letters from being sent in messages with links, but preserve url case
-      const url = msg.content.match(urlRegex)[0]
-      const messageWithoutUrl = msg.content.replace(url, '')
-      const fixedMessage = fixMessageCase(member, messageWithoutUrl).said
-      const finalMessage = `${fixedMessage}${url}`
+      const getAllUrls = msg => {
+        const matches = []
+
+        const urls = msg.content.match(urlRegex)
+
+        urls.forEach(url => {
+          const idx = msg.content.indexOf(url)
+
+          matches.push({
+            idx,
+            url
+          })
+        })
+
+        return matches
+      }
+
+      const constructFinalMessage = message => {
+        const urls = getAllUrls(msg)
+
+        let finalMsg = message
+
+        urls.forEach(({ idx, url }) => {
+          finalMsg = [finalMsg.slice(0, idx), url, finalMsg.slice(idx)].join('')
+        })
+        console.log(finalMsg)
+        return finalMsg
+      }
+
+      const messageWithoutUrl = msg.content.replace(urlRegex, '')
+      const fixedMessage = fixMessageCase(member, messageWithoutUrl)
+
+      const finalMessage = appendData(
+        member,
+        constructFinalMessage(fixedMessage)
+      ).said
 
       // send message with optional attachments
       msg.channel
@@ -109,7 +148,8 @@ client.on('message', msg => {
       return
     }
   } else if (containsUppercase(msg.content) && correction == true) {
-    let newMsg = fixMessageCase(member, originalMessage).said
+    let newMsg = appendData(member, fixMessageCase(member, originalMessage))
+      .said
 
     // send message with optional attachments
     msg.channel
