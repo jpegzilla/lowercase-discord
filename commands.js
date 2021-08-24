@@ -1,99 +1,115 @@
-const { prefix } = require("./config.json");
-let correction = true;
+const { prefix } = require('./config.json')
+let correction = true
 
 const handleUserCommands = (command, msg) => {
-  console.log("[lowercase] handling command:", command);
+  console.log('[lowercase] handling command:', command)
 
-  const discord = require("discord.js");
-  const lowercaseInfo = require("./package.json");
-  const configVars = require("./config.json");
+  const discord = require('discord.js')
+  const lowercaseInfo = require('./package.json')
+  const configVars = require('./config.json')
 
-  const embed = new discord.RichEmbed().setColor("#e0005d");
+  const sendInfoMessage = () => {
+    const versionEmbed = new discord.RichEmbed()
+      .setColor('#e0005d')
+      .setTitle(`[lowercase] ⇒ on github`)
+      .setURL(lowercaseInfo.homepage)
+      .setAuthor(
+        'jpegzilla',
+        'https://avatars1.githubusercontent.com/u/19843222?s=460&v=4',
+        lowercaseInfo.homepage
+      )
+      .setDescription(lowercaseInfo.description)
+      .setThumbnail(
+        'https://github.com/jpegzilla/lowercase-discord/raw/master/assets/lowercase-icon-48.png'
+      )
+      .addField('version', lowercaseInfo.version, true)
+      .addField('prefix', configVars.prefix, true)
+      .addField('correction on', JSON.stringify(correction))
+      .setTimestamp()
+
+    msg.channel.send(versionEmbed)
+  }
+
+  const sendHelpMessage = () => {
+    const helpMessage = embed
+      .setTitle(`[lowercase] ⇒ command list`)
+      .addField('show version / info', 'version, info, v, i', true)
+      .addField('show help', 'help, man, h', true)
+      .addField('show icon', 'icon, face, logo', true)
+
+    msg.channel.send(helpMessage)
+  }
+
+  const sendLogoMessage = () => {
+    const logoEmbed = embed
+      .setTitle('[lowercase] ⇒ my face')
+      .setImage(
+        'https://raw.githubusercontent.com/jpegzilla/lowercase-discord/master/assets/lowercase-icon.png'
+      )
+
+    msg.channel.send(logoEmbed)
+  }
+
+  const sendInvalidSyntaxWarning = () => {
+    const commandWithoutPrefix = msg.content.replace(prefix, '').trim()
+
+    msg.channel.send(
+      `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix} is not valid. use \`l~ help\` for a list of commands!`
+    )
+  }
+
+  const embed = new discord.RichEmbed().setColor('#e0005d')
 
   switch (command) {
     // show version / info
-    case "v":
-    case "i":
-    case "version":
-    case "info":
-      const versionEmbed = new discord.RichEmbed()
-        .setColor("#e0005d")
-        .setTitle(`[lowercase] ⇒ on github`)
-        .setURL(lowercaseInfo.homepage)
-        .setAuthor(
-          "jpegzilla",
-          "https://avatars1.githubusercontent.com/u/19843222?s=460&v=4",
-          lowercaseInfo.homepage
-        )
-        .setDescription(lowercaseInfo.description)
-        .setThumbnail(
-          "https://github.com/jpegzilla/lowercase-discord/raw/master/assets/lowercase-icon-48.png"
-        )
-        .addField("version", lowercaseInfo.version, true)
-        .addField("prefix", configVars.prefix, true)
-        .addField("correction on", JSON.stringify(correction))
-        .setTimestamp();
-
-      msg.channel.send(versionEmbed);
-      break;
+    case 'v':
+    case 'i':
+    case 'version':
+    case 'info':
+      sendInfoMessage()
+      break
 
     // help commands
-    case "help":
-    case "man":
-    case "h":
-      const helpMessage = embed
-        .setTitle(`[lowercase] ⇒ command list`)
-        .addField("show version / info", "version, info, v, i", true)
-        .addField("show help", "help, man, h", true)
-        .addField("show icon", "icon, face, logo", true);
-
-      msg.channel.send(helpMessage);
-      break;
+    case 'help':
+    case 'man':
+    case 'h':
+      sendHelpMessage()
+      break
 
     // hello test command
-    case "hello":
-    case "hi":
-    case "hey":
-    case "test":
-      msg.channel.send("hello!");
-      break;
+    case 'hello':
+    case 'hi':
+    case 'hey':
+    case 'test':
+      msg.channel.send('hello!')
+      break
 
     // toggle lowercase correction
-    case "correction toggle":
-      correction = correction == true ? false : true;
+    case 'correction toggle':
+      correction = correction == true ? false : true
 
-      module.exports.correction = correction;
+      module.exports.correction = correction
 
       msg.channel.send(
         `\`[lowercase]\` reporting for duty ⇒ correction has been set to ${
-          correction ? "true" : "false"
+          correction ? 'true' : 'false'
         }.`
-      );
-      break;
+      )
+      break
 
     // show lowercase icon
-    case "logo":
-    case "icon":
-    case "face":
-      const logoEmbed = embed
-        .setTitle("[lowercase] ⇒ my face")
-        .setImage(
-          "https://raw.githubusercontent.com/jpegzilla/lowercase-discord/master/assets/lowercase-icon.png"
-        );
-
-      msg.channel.send(logoEmbed);
-      break;
+    case 'logo':
+    case 'icon':
+    case 'face':
+      sendLogoMessage()
+      break
     default:
-      const commandWithoutPrefix = msg.content.replace(prefix, "").trim();
-
-      msg.channel.send(
-        `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix} is not valid. use \`l~ help\` for a list of commands!`
-      );
-      return;
+      sendInvalidSyntaxWarning()
+      return
   }
-};
+}
 
 module.exports = {
   handleUserCommands: handleUserCommands,
   correction: correction
-};
+}
