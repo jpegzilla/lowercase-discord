@@ -1,64 +1,76 @@
 const { prefix } = require('./config.json')
+const { MessageEmbed } = require('discord.js')
+const lowercaseInfo = require('./package.json')
+
 let correction = true
 
 const handleUserCommands = (command, msg) => {
   console.log('[lowercase] handling command:', command)
 
-  const discord = require('discord.js')
-  const lowercaseInfo = require('./package.json')
-  const configVars = require('./config.json')
-
   const sendInfoMessage = () => {
-    const versionEmbed = new discord.RichEmbed()
-      .setColor('#e0005d')
-      .setTitle(`[lowercase] ⇒ on github`)
-      .setURL(lowercaseInfo.homepage)
-      .setAuthor(
-        'jpegzilla',
-        'https://avatars1.githubusercontent.com/u/19843222?s=460&v=4',
-        lowercaseInfo.homepage
-      )
-      .setDescription(lowercaseInfo.description)
-      .setThumbnail(
-        'https://github.com/jpegzilla/lowercase-discord/raw/master/assets/lowercase-icon-48.png'
-      )
-      .addField('version', lowercaseInfo.version, true)
-      .addField('prefix', configVars.prefix, true)
-      .addField('correction on', JSON.stringify(correction))
-      .setTimestamp()
+    const versionEmbed = new MessageEmbed({
+      title: '[lowercase] ⇒ on github',
+      color: '#e0005d',
+      url: lowercaseInfo.homepage,
+      author: {
+        iconURL: 'https://avatars1.githubusercontent.com/u/19843222?s=460&v=4',
+        name: 'jpegzilla',
+        url: lowercaseInfo.homepage,
+      },
+      description: lowercaseInfo.description,
+      thumbnail:
+        'https://github.com/jpegzilla/lowercase-discord/raw/master/assets/lowercase-icon-48.png',
+      timestamp: new Date().toLocaleString(),
+      fields: [
+        { name: 'version', value: lowercaseInfo.version, inline: true },
+        { name: 'prefix', value: prefix, inline: true },
+        { name: 'correction on?', value: JSON.stringify(correction) },
+      ],
+    })
 
-    msg.channel.send(versionEmbed)
+    msg.channel.send({ embeds: [versionEmbed] })
   }
 
   const sendHelpMessage = () => {
-    const helpMessage = embed
-      .setTitle(`[lowercase] ⇒ command list`)
-      .addField('show version / info', 'version, info, v, i', true)
-      .addField('show help', 'help, man, h', true)
-      .addField('show icon', 'icon, face, logo', true)
+    const helpMessage = new MessageEmbed({
+      title: '[lowercase] ⇒ command list',
+      color: '#e0005d',
+      fields: [
+        {
+          name: 'show version / info',
+          value: 'version, info, v, i',
+          inline: true,
+        },
+        { name: 'show help', value: 'help, man, h', inline: true },
+        { name: 'show icon', value: 'icon, face, logo', inline: true },
+      ],
+    })
 
-    msg.channel.send(helpMessage)
+    msg.channel.send({ embeds: [helpMessage] })
   }
 
   const sendLogoMessage = () => {
-    const logoEmbed = embed
-      .setTitle('[lowercase] ⇒ my face')
-      .setImage(
-        'https://raw.githubusercontent.com/jpegzilla/lowercase-discord/master/assets/lowercase-icon.png'
-      )
+    const logoEmbed = new MessageEmbed({
+      title: '[lowercase] ⇒ my face',
+      color: '#e0005d',
+      image: {
+        url:
+          'https://raw.githubusercontent.com/jpegzilla/lowercase-discord/master/assets/lowercase-icon.png',
+        height: 1024,
+        width: 978,
+      },
+    })
 
-    msg.channel.send(logoEmbed)
+    msg.channel.send({ embeds: [logoEmbed] })
   }
 
   const sendInvalidSyntaxWarning = () => {
     const commandWithoutPrefix = msg.content.replace(prefix, '').trim()
 
     msg.channel.send(
-      `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix} is not valid. use \`l~ help\` for a list of commands!`
+      `\`[lowercase]\` reporting for duty ⇒ ${commandWithoutPrefix} is not valid. use \`l! help\` for a list of commands!`
     )
   }
-
-  const embed = new discord.RichEmbed().setColor('#e0005d')
 
   switch (command) {
     // show version / info
@@ -111,5 +123,5 @@ const handleUserCommands = (command, msg) => {
 
 module.exports = {
   handleUserCommands: handleUserCommands,
-  correction: correction
+  correction: correction,
 }

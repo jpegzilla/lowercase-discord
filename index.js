@@ -1,15 +1,18 @@
 require('dotenv').config()
 
-const discord = require('discord.js')
+const { Client, Intents } = require('discord.js')
 const { prefix } = require('./config.json')
+const express = require('express')
 
 const { handleUserCommands } = require('./commands')
 
-const client = new discord.Client()
+const client = new Client({
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
+})
 const https = require('https')
 
 client.once('ready', () => {
-  console.log('ready.')
+  console.log('ready to fuck')
 
   setInterval(
     () => https.get('https://lowercase-discord.herokuapp.com/'),
@@ -17,7 +20,8 @@ client.once('ready', () => {
   )
 })
 
-client.on('message', msg => {
+client.on('messageCreate', msg => {
+  console.log(`message: ${msg}`)
   let { correction } = require('./commands')
 
   const regex = /[A-HJ-Z]|I(?=[A-Za-z0-9])/gm
@@ -51,11 +55,11 @@ client.on('message', msg => {
   const appendData = (member, newMsg) => {
     return {
       said: `**${member} said:** ${newMsg}`,
-      content: newMsg
+      content: newMsg,
     }
   }
 
-  const fixMessageCase = (member, originalMessage) => {
+  const fixMessageCase = originalMessage => {
     // replace inappropriate letters with x's
     let replacedWithX = originalMessage.replace(regex, 'x')
     let matches = originalMessage.match(regex)
@@ -85,10 +89,8 @@ client.on('message', msg => {
   ) {
     // if message is invalid, but user was trying to enter a command
 
-    const fixedMessage = appendData(
-      member,
-      fixMessageCase(member, originalMessage)
-    ).content
+    const fixedMessage = appendData(member, fixMessageCase(originalMessage))
+      .content
     const commandWithoutPrefix = fixedMessage.replace(prefix, '').trim()
 
     if (commandWithoutPrefix) handleUserCommands(commandWithoutPrefix, msg)
@@ -112,7 +114,7 @@ client.on('message', msg => {
 
           matches.push({
             idx,
-            url
+            url,
           })
         })
 
@@ -132,7 +134,7 @@ client.on('message', msg => {
       }
 
       const messageWithoutUrl = msg.content.replace(urlRegex, '')
-      const fixedMessage = fixMessageCase(member, messageWithoutUrl)
+      const fixedMessage = fixMessageCase(messageWithoutUrl)
 
       const finalMessage = appendData(
         member,
@@ -148,8 +150,7 @@ client.on('message', msg => {
       return
     }
   } else if (containsUppercase(msg.content) && correction == true) {
-    let newMsg = appendData(member, fixMessageCase(member, originalMessage))
-      .said
+    let newMsg = appendData(member, fixMessageCase(originalMessage)).said
 
     // send message with optional attachments
     msg.channel
@@ -168,7 +169,6 @@ client.on('message', msg => {
 
 client.login(process.env.TOKEN) // .listen(process.env.PORT || 5000);
 
-const express = require('express')
 const app = express()
 
 let port = process.env.PORT || 3000
